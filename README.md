@@ -1,8 +1,8 @@
 # Roblox Group Wall Archive
-Welcome to the Roblox Group Wall Archive. This repository mainly contains the sources used for this service. Since group walls on Roblox are being phased out soon, this service has started up to attempt to preserve these walls for archival and memorable purposes.
+Welcome to the Roblox Group Wall Archive! This repository mainly contains the sources used for this service as well as archives we have acquired. Since group walls on Roblox are being phased out soon, this service has started up to attempt to preserve these walls for archival and memorable purposes.
 
 ## Programs
-RGWA allows use of manual archiving or automated archiving. This repository alone contains a Python script that does automation process with ease by default, but other scripts can be used if necessary.
+RGWA allows use of manual archiving or automated archiving. This repository contains a Python script (`automate.py`) that does automation process with ease by default, but other scripts can be used if necessary.
 
 ## Installation
 ### Releases
@@ -28,4 +28,10 @@ Files created by the script are sorted under the Archives folder, which is autom
 The software provided in this repository is licensed under the [GNU General Public 3.0](LICENSE) license. (GPL)<br>
 Any files this software generates are licensed under the [CC-BY-ND-4.0](FILE_LICENSE) license.
 
-More information about these licenses are available under the [NOTICES.md](NOTICES.md)file.
+More information about these licenses are available under the [NOTICES.md](NOTICES.md) file.
+
+## Contributing
+We're open to anyone who want to contribute to this process! Any contribution requests are available by opening a pull request. Just make sure that any pull requests are **tested beforehand**! It wouldn't be such a pleasure if anything broke.<br>
+If or when you do notice any issues with any software in this repo, please make an issues request.
+
+We thank everyone for their contributions!
