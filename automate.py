@@ -1,7 +1,7 @@
 ####
 # automate.py - Automated scraping of group walls, for archival purposes.
 # Garry – August 22nd, 2025.
-# Licensed under CC-BY-SA-4.0
+# Licensed under GNU General Public License v3.0
 # Revision Development 03
 
 # Revision History:
@@ -303,7 +303,7 @@ def main():
         else:
             os.system('clear')
 
-        print(f"{RESET}{INFO}{SCRIPT_VERSION} © 2025 Garry Brown\nThis program is licensed under CC-BY-SA-4.0. \nGenerated files are licensed under CC-BY-ND-4.0.{RESET}\n\nThis script retrieves posts from a group's wall to preserve once walls are deprecated and removed.\nPlease remember, this script is for archival purposes only! Do not use it for malicious purposes.\n")
+        print(f"{RESET}{INFO}{SCRIPT_VERSION} © 2025 Garry Brown\nThis program is licensed under GNU General Public License v3.0. \nGenerated files are licensed under CC-BY-ND-4.0.{RESET}\n\nThis script retrieves posts from a group's wall to preserve once walls are deprecated and removed.\nPlease remember, this script is for archival purposes only! Do not use it for malicious purposes.\n")
         print(f"{WARNING}WARNING: You are providing your .ROBLOSECURITY cookie.")
         print(f"{WARNING}This gives FULL access to your account. Use at your own risk!")
         print(f"If someone else gave you this cookie or you are unsure, DO NOT proceed.{RESET}")
@@ -329,5 +329,6 @@ def main():
 
 if __name__ == "__main__":
     
-    print(f"{RESET}{INFO}{SCRIPT_VERSION} © 2025 Garry Brown\nThis program is licensed under CC-BY-SA-4.0. \nGenerated files are licensed under CC-BY-ND-4.0.{RESET}\n\nThis script retrieves posts from a group's wall to preserve once walls are deprecated and removed.\nPlease remember, this script is for archival purposes only! Do not use it for malicious purposes.\n")
+    print(f"{RESET}{INFO}{SCRIPT_VERSION} © 2025 Garry Brown\nThis program is licensed under GNU General Public License v3.0. \nGenerated files are licensed under CC-BY-ND-4.0.{RESET}\n\nThis script retrieves posts from a group's wall to preserve once walls are deprecated and removed.\nPlease remember, this script is for archival purposes only! Do not use it for malicious purposes.\n")
     main()
+
