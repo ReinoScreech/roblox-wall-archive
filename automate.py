@@ -9,7 +9,8 @@
 #   Revision Development 02 - Add arguments for extensive functionality
 #   Revision Development 03 - Update file process to use folders
 #   Revision 1.0 - Initial release
-SCRIPT_VERSION = "RGWA automate.py Revision 1.0"
+#   Revision 1.1 - Add argument to choose which version the API should use
+SCRIPT_VERSION = "RGWA automate.py Revision 1.1"
 ####
 
 # Thank you for using this automation script! Please make sure to read the documentation on https://github.com/ReinoScreech/roblox-wall-archive/blob/main/README.md
@@ -53,6 +54,12 @@ def parse_args():
         help="(OPTIONAL) Formats all posts into one line at a time.",
         action="store_true"
     )
+    parser.add_argument(
+        "--version",
+        help="The API version to use",
+        type=int,
+        default=2
+    )
     return parser.parse_args()
 
 try:
@@ -64,9 +71,10 @@ except SystemExit:
 marg = parse_args()
 GROUP_ID = marg.groupid
 GROUP_NAME = marg.groupname
+API_VERSION = marg.version
 OUTPUT_FILE = f"{GROUP_NAME}_{GROUP_ID}.txt"
 
-WALL_URL = f"https://groups.roblox.com/v2/groups/{GROUP_ID}/wall/posts"
+WALL_URL = f"https://groups.roblox.com/v{API_VERSION}/groups/{GROUP_ID}/wall/posts"
 RANK_URL = "https://groups.roblox.com/v2/users/{userId}/groups/roles"
 
 rank_cache = {}
@@ -331,4 +339,3 @@ if __name__ == "__main__":
     
     print(f"{RESET}{INFO}{SCRIPT_VERSION} © 2025 Garry Brown\nThis program is licensed under GNU General Public License v3.0. \nGenerated files are licensed under CC-BY-ND-4.0.{RESET}\n\nThis script retrieves posts from a group's wall to preserve once walls are deprecated and removed.\nPlease remember, this script is for archival purposes only! Do not use it for malicious purposes.\n")
     main()
-
