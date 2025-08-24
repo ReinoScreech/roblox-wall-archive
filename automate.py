@@ -10,7 +10,8 @@
 #   Revision Development 03 - Update file process to use folders
 #   Revision 1.0 - Initial release
 #   Revision 1.1 - Add argument to choose which version the API should use
-SCRIPT_VERSION = "RGWA automate.py Revision 1.1"
+#   Revision 2.0 - Fixes timestamp issue on first/last post info and Adds poster information functionality for API v1
+SCRIPT_VERSION = "RGWA automate.py Revision 2.0"
 ####
 
 # Thank you for using this automation script! Please make sure to read the documentation on https://github.com/ReinoScreech/roblox-wall-archive/blob/main/README.md
@@ -22,6 +23,7 @@ import time
 import sys
 import os
 import argparse
+import re
 
 # ANSI Codes
 ERROR = "\033[91m"
@@ -65,7 +67,7 @@ def parse_args():
 try:
     parse_args()
 except SystemExit:
-    print(f"\n{WARNING}To use this program, you must add the --groupid and --groupname arguments.\nFor a list of arguments. Run this program with --h or --help.{RESET}\nCheck out the documentation at https://github.com/ReinoScreech/roblox-wall-archive/blob/main/README.md")
+    print(f"\n{WARNING}To use this program, you must add the --groupid and --groupname arguments.\nFor a list of arguments. Run this program with --h or --help.{RESET}\nCheck out the documentation at {INFO}https://github.com/ReinoScreech/roblox-wall-archive/blob/main/README.md{RESET}")
     sys.exit(0)
 
 marg = parse_args()
@@ -158,17 +160,31 @@ def fetch_wall_posts(rs=None, cmp=False):
         print(f"  Retrieved page {page_count} with {len(data['data'])} posts. Next page: {data.get('nextPageCursor')}")
 
         for post in data['data']:
-            poster = post.get('poster') or {}
-            user_poster = poster.get('user') or {}
-            role_data = poster.get('role') or {}
-            display_name = user_poster.get('displayName', "Unknown")
-            user_id = user_poster.get('userId', 0)
-            role_name = role_data.get('name')
-            content = post.get('body', '')
-            created = post.get('created')
-            dt = datetime.datetime.fromisoformat(created.replace("Z", "+00:00")).astimezone(datetime.timezone.utc)
-            date_posted = dt.strftime("%Y-%m-%d")
-            time_posted = dt.strftime("%H:%M")
+            if API_VERSION == 2:
+                poster = post.get('poster') or {}
+                user_poster = poster.get('user') or {}
+                role_data = poster.get('role') or {}
+                display_name = user_poster.get('displayName', "Unknown")
+                user_id = user_poster.get('userId', 0)
+                role_name = role_data.get('name')
+                content = post.get('body', '')
+                created = post.get('created')
+                dt = datetime.datetime.fromisoformat(created.replace("Z", "+00:00")).astimezone(datetime.timezone.utc)
+                date_posted = dt.strftime("%Y-%m-%d")
+                time_posted = dt.strftime("%H:%M")
+            elif API_VERSION == 1:
+                poster = post.get('poster') or {}
+                display_name = poster.get('displayName', "Unknown")
+                user_id = poster.get('userId', 0)
+                role_name = "Unknown"
+                content = post.get('body', '')
+                created = post.get('created')
+                dt = datetime.datetime.fromisoformat(created.replace("Z", "+00:00")).astimezone(datetime.timezone.utc)
+                date_posted = dt.strftime("%Y-%m-%d")
+                time_posted = dt.strftime("%H:%M")
+            else:
+                print(f"{ERROR}The API version, {API_VERSION} is not available in this environment. Please re-enter the API version (either 1 or 2) and try again.{RESET}")
+                sys.exit(0)
 
             # Old group walls have broken posts for some reason, so fallbacks and this warning is here so that user_poster doesn't error out.
             if not poster:
@@ -176,6 +192,7 @@ def fetch_wall_posts(rs=None, cmp=False):
 
 #            print(f"Debug - {display_name}, {user_id}, {post.get('created')}")
 
+            # This makes the process very slow and more prone to rate-limiting, but I'll leave it as a fallback for now.    
             if not role_name:
                 role_name = get_user_rank_name(user_id)
 
@@ -212,27 +229,15 @@ def save_file(posts, page_count):
     # Get first and last post dates
     # Since posts are descending, first post = last element.
 
-    # First post:
-    lines = posts[-1].split("\n")  # posts[-1] = oldest
-    last_line = lines[-1] if lines else ""
-    parts = last_line.split("|")
-    if len(parts) >= 3:  # RoleName | YYYY-MM-DD | HH:MM UTC
-        first_post_date = parts[1].strip()
-        first_post_time = parts[2].strip()
-    else:
-        first_post_date = "Unknown"
-        first_post_time = "Unknown"
+    first_match_date = re.search(r"\b\d{4}-\d{2}-\d{2}\b", posts[-1])
+    first_match_time = re.search(r"\b\d{2}:\d{2}\b", posts[-1])
+    first_post_date = first_match_date.group(0) if first_match_date else "Unknown"
+    first_post_time = first_match_time.group(0) if first_match_time else "Unknown"
 
-    # Last post:
-    lines = posts[0].split("\n")  # posts[0] = newest
-    last_line = lines[-1] if lines else ""
-    parts = last_line.split("|")
-    if len(parts) >= 3:
-        last_post_date = parts[1].strip()
-        last_post_time = parts[2].strip()
-    else:
-        last_post_date = "Unknown"
-        last_post_time = "Unknown"
+    last_match_date = re.search(r"\b\d{4}-\d{2}-\d{2}\b", posts[0])
+    last_match_time = re.search(r"\b\d{2}:\d{2}\b", posts[0])
+    last_post_date = last_match_date.group(0) if last_match_date else "Unknown"
+    last_post_time = last_match_time.group(0) if last_match_time else "Unknown"
 
     # Start writing the results
     print(f"\nWriting results...")
